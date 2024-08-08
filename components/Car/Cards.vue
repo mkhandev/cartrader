@@ -1,6 +1,5 @@
 <script setup>
 const { cars } = useCars();
-
 </script>
 
 <template>
