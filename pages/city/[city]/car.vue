@@ -1,7 +1,7 @@
 <script setup>
 const route = useRoute();
 
-const {toTitleCase} = useUtilities();
+const { toTitleCase } = useUtilities();
 
 useHead({
   title: `${
@@ -17,8 +17,25 @@ definePageMeta({
 <template>
   <div>
     <div class="mt-32 flex">
-      <CarSideBar />
-      <NuxtPage />
+      <NuxtErrorBoundary>
+        <CarSideBar />
+        <NuxtPage />
+
+        <template #error="{ error }">
+          <div class="text-center mx-auto flex flex-col">
+            <code>{{ error }}</code>
+            <h1 class="text-5xl text-red-600 mb-4">
+              Sorry, something went wrong
+            </h1>
+            <button
+              @click="error.value = null"
+              class="text-white bg-blue-400 px-10 py-3 mt-3"
+            >
+              Go Back
+            </button>
+          </div>
+        </template>
+      </NuxtErrorBoundary>
     </div>
   </div>
 </template>
