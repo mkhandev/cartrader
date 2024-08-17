@@ -3,6 +3,8 @@ const props = defineProps({
   listing: "object",
 });
 
+
+const emit = defineEmits(["deleteClick"])
 </script>
 
 <template>
@@ -20,7 +22,7 @@ const props = defineProps({
         :to="`/profile/listings/view/${listing.id}`"
         >View</NuxtLink
       >
-      <p class="text-red-400 cursor-pointer">Delete</p>
+      <p class="text-red-400 cursor-pointer" @click="emit('deleteClick', listing.id)">Delete</p>
     </div>
   </div>
 </template>

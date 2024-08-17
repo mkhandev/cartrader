@@ -34,6 +34,7 @@ export default defineEventHandler(async (event) => {
 
   const message = prisma.message.create({
     data:{
+        name:body.name,
         message: body.message,
         email: body.email,
         phone: body.phone,
