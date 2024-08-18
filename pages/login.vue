@@ -6,30 +6,25 @@ definePageMeta({
 const supabase = useSupabaseClient();
 const user = useSupabaseUser();
 
-
-const loginOld = async () => {
-  const { data, error } = supabase.auth.signInWithOAuth({
-    provider: "google",
-  });
-
-  if (error) console.log(error);
-};
-
 const login = async () => {
   try {
     const { error } = await supabase.auth.signInWithOAuth({
-      provider: 'google',
+      provider: "google",
       options: {
-        redirectTo: 'https://cartrader-bay.vercel.app', // Replace with your site URL
+        redirectTo: "https://cartrader-bay.vercel.app",
       },
     });
 
-    if (error) throw error;
-    
-    // Redirect to the site URL after successful login
-    router.push('/');
+    if (error) {
+      throw createError({
+        statusCode: error.value.statusCode,
+        statusMessage: error.value.statusMessage,
+      });
+    }
+
+    router.push("/");
   } catch (error) {
-    console.error('Error logging in with Google:', error.message);
+    console.error("Error logging in with Google:", error.message);
   }
 };
 </script>
