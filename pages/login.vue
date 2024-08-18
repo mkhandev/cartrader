@@ -9,10 +9,7 @@ const user = useSupabaseUser();
 const login = async () => {
   try {
     const { error } = await supabase.auth.signInWithOAuth({
-      provider: "google",
-      options: {
-        redirectTo: "https://cartrader-bay.vercel.app",
-      },
+      provider: "google"
     });
 
     if (error) {
