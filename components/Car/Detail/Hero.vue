@@ -1,13 +1,15 @@
 <script setup>
 const props = defineProps({
   car:Object
-})
+});
+
+const config = useRuntimeConfig();
 </script>
 
 <template>
   <div class="mt-10">
     <img
-      :src="car.image"
+      :src="`${config.public.supabase.url}/storage/v1/object/public/images/${car.image}`"
       class="w-full"
       alt=""
     />

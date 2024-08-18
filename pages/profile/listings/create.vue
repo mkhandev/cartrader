@@ -11,7 +11,6 @@ const user = useSupabaseUser();
 
 const errorMessage = ref("");
 
-
 const info = useState("adInfo", () => {
   return {
     make: "",
@@ -30,6 +29,8 @@ const info = useState("adInfo", () => {
 const onChangeInput = (data, name) => {
   info.value[name] = data;
 };
+
+//No Accidents, Low KM, Vehicle Detailed, Leather Interior
 
 const inputs = [
   {
@@ -85,35 +86,44 @@ const isButtonDisabled = computed(() => {
 });
 
 const handleClick = async () => {
+  const fileName = Math.floor(Math.random() * 1000000000000);
+  const { data, error } = await supabase.storage
+    .from("images")
+    .upload("public/" + fileName, info.value.image);
+
+  if (error) {
+    errorMessage.value = "Can not upload image";
+  }
+
   const body = {
     ...info.value,
-    city:info.value.city.toLocaleLowerCase(),
-    features:info.value.features.split(", "),
-    numberOfSeats:parseInt(info.value.seats),
-    miles:parseInt(info.value.miles),
-    price:parseInt(info.value.price),
-    year:parseInt(info.value.year),
+    city: info.value.city.toLocaleLowerCase(),
+    features: info.value.features.split(", "),
+    numberOfSeats: parseInt(info.value.seats),
+    miles: parseInt(info.value.miles),
+    price: parseInt(info.value.price),
+    year: parseInt(info.value.year),
     listerId: user.value.id, // login user id
-    image:"aaa",
+    image: data.path,
     //name: `${info.value.make}  ${info.value.model}`,
     name: `${info.value.make}`,
   };
 
-  delete body.seats
+  delete body.seats;
 
   try {
-
     const response = await $fetch(`/api/car/listings`, {
       method: "POST",
-      body: body
-    })
+      body: body,
+    });
 
-    navigateTo("/profile/listings")
-    
+    navigateTo("/profile/listings");
   } catch (error) {
-    errorMessage.value = error.statusMessage
+    errorMessage.value = error.statusMessage;
+
+    //if data not save then delete the uploaded image
+    await supabase.storage.from("images").remove(data.path);
   }
-  
 };
 </script>
 

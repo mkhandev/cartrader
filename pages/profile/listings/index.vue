@@ -1,7 +1,6 @@
 <script setup>
 definePageMeta({
   layout: "custom",
-  //middleware:["auth"]
 });
 
 //const { listings } = useCars();
@@ -11,21 +10,35 @@ const { data: listings, refresh } = await useFetch(
   `/api/car/listings/user/${user.value.id}`
 );
 
-const handleDelete = async (id) => {
-  await $fetch(`/api/car/listings/${id}`, {
+// const handleDelete = async (id) => {
+//   await $fetch(`/api/car/listings/${id}`, {
+//     method: "DELETE",
+//   });
+
+//   refresh();
+// };
+
+const confirmDialog = ref(null);
+const listingIdToDelete = ref(null);
+
+const handleDeleteClick = (id) => {
+  listingIdToDelete.value = id;
+  confirmDialog.value.open();
+};
+
+const handleDeleteConfirm = async () => {
+  await $fetch(`/api/car/listings/${listingIdToDelete.value}`, {
     method: "DELETE",
   });
 
-
   refresh();
-
-  // or reload listing data
-  //listings.value = listings.value.filter(listing => listing.id != id);
-};
+  listingIdToDelete.value = null; // Reset the value after deletion
+}
 </script>
 
 <template>
   <div>
+    <CustomModal ref="confirmDialog" @confirm="handleDeleteConfirm" />
     <div class="flex justify-between mt-24 items-center">
       <h1 class="text-3xl">My Listings</h1>
       <NuxtLink
@@ -40,7 +53,7 @@ const handleDelete = async (id) => {
         v-for="listing in listings"
         :key="listing.id"
         :listing="listing"
-        @delete-click="handleDelete"
+        @delete-click="handleDeleteClick"
       />
     </div>
   </div>
