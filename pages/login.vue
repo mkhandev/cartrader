@@ -5,14 +5,17 @@ definePageMeta({
 
 const supabase = useSupabaseClient();
 
-const user = useSupabaseUser()
+const user = useSupabaseUser();
 
 const login = async () => {
   const { error } = supabase.auth.signInWithOAuth({
     provider: "google",
+    options: {
+      redirectTo: "https://cartrader-bay.vercel.app",
+    },
   });
 
-  if (error) console.log(error)
+  if (error) console.log(error);
 };
 </script>
 
